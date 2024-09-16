@@ -1,10 +1,17 @@
+'use client'
 import Link from 'next/link';
 import { Form } from 'app/form';
 import { signIn } from 'app/auth';
 import { SubmitButton } from 'app/submit-button';
 import { AuthError } from 'next-auth';
+import { useActionState, useState } from "react";
+import { authenticate } from "@/app/lib/actions";
+import { useFormState } from 'react-dom'; // Import useFormState
 export default function Login() {
-  
+  const [errorMessage, formAction] = useFormState(
+    authenticate,
+    undefined
+  );
   return (
     <div className="flex h-screen w-screen items-center justify-center bg-gray-50">
       <div className="z-10 w-full max-w-md overflow-hidden rounded-2xl border border-gray-100 shadow-xl">
@@ -15,27 +22,7 @@ export default function Login() {
           </p>
         </div>
         <Form
-          action={async (formData: FormData) => {
-            'use server';
-            try{
-              await signIn('credentials', {
-                redirectTo: '/job-board',
-                email: formData.get('email') as string,
-                password: formData.get('password') as string,
-              });
-            }catch (error) {
-              if (error instanceof AuthError) {
-                switch (error.type) {
-                  case 'CredentialsSignin':
-                    console.log( 'Invalid credentials.');
-                  default:
-                    console.log( 'Something went wrong.');
-                }
-              }
-              throw error;
-            }
-
-          }}
+          action={formAction}
         >
           <SubmitButton>Sign in</SubmitButton>
           <p className="text-center text-sm text-gray-600">
