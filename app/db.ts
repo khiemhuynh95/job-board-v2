@@ -1,4 +1,4 @@
-// main.ts
+// db.ts
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { eq } from 'drizzle-orm';
 import postgres from 'postgres';
@@ -19,4 +19,17 @@ export async function createUser(email: string, password: string) {
 
   // Insert using the imported usersTable schema
   return await db.insert(usersTable).values({ email, password: hash });
+}
+
+export async function updateUser(email: string, updateData: Partial<typeof usersTable.$inferInsert>) {
+  // If the update includes a password, hash it before updating
+  if (updateData.password) {
+    let salt = genSaltSync(10);
+    updateData.password = hashSync(updateData.password, salt);
+  }
+
+  // Update the user data
+  return await db.update(usersTable)
+    .set(updateData)
+    .where(eq(usersTable.email, email));
 }
