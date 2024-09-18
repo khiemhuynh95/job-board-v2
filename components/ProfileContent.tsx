@@ -3,13 +3,13 @@
 import { useState, useRef } from 'react'
 import Link from 'next/link'
 import { updateProfile } from '@/app/lib/actions'
+import PdfViewer from './PDFViewer'
 
 type ProfileContentProps = {
-    user: any  // Replace 'any' with a more specific type if available
+  user: any
 }
 
 export default function ProfileContent({ user }: ProfileContentProps) {
-    console.log(user)
   const [name, setName] = useState(user?.name || '')
   const [resumeFile, setResumeFile] = useState<File | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -23,7 +23,6 @@ export default function ProfileContent({ user }: ProfileContentProps) {
     try {
       const result = await updateProfile(formData)
       if (result.success) {
-        // Update local state or show success message
         console.log('Profile updated successfully')
       }
     } catch (error) {
@@ -74,14 +73,6 @@ export default function ProfileContent({ user }: ProfileContentProps) {
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
-            {user?.resumeurl && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Current Resume</label>
-                <a href={user.resumeurl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-600">
-                  View Current Resume
-                </a>
-              </div>
-            )}
             <button
               type="submit"
               disabled={isLoading}
@@ -90,6 +81,15 @@ export default function ProfileContent({ user }: ProfileContentProps) {
               {isLoading ? 'Saving...' : 'Save Changes'}
             </button>
           </form>
+
+          {user?.resumeurl && (
+            <div className="mt-8">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Current Resume</h3>
+              <div className="border border-gray-300 rounded-md overflow-hidden" style={{ height: 'calc(100vh - 400px)', maxHeight: '800px' }}>
+                <PdfViewer url={user.resumeurl} />
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>
