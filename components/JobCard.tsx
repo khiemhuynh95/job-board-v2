@@ -1,4 +1,4 @@
-export default function JobCard({ job }) {
+export default function JobCard({ job } : any) {
     return (
       <div className="bg-white shadow rounded-lg p-6">
         <h2 className="text-xl font-semibold text-gray-900">{job.title}</h2>
