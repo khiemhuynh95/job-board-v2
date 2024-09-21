@@ -74,3 +74,9 @@ export async function updateProfile(formData: FormData) {
 
   return { success: true, name: updateData.name, resumeUrl: updateData.resumeUrl }
 }
+
+import { signOut } from 'app/auth'
+
+export async function signOutAction() {
+  await signOut({ redirectTo: "/login", redirect: true })
+}

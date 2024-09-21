@@ -1,10 +1,7 @@
 'use client'
 import Link from 'next/link';
 import { Form } from 'app/form';
-import { signIn } from 'app/auth';
 import { SubmitButton } from 'app/submit-button';
-import { AuthError } from 'next-auth';
-import { useActionState, useState } from "react";
 import { authenticate } from "@/app/lib/actions";
 import { useFormState } from 'react-dom'; // Import useFormState
 export default function Login() {
