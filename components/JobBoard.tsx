@@ -1,18 +1,19 @@
 'use client'
 
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { Session } from 'next-auth'
 import { signOutAction } from '@/app/lib/actions'
-
+import JobCard from './JobCard'
+import JobModal from './JobModal'
 
 // Mock job data
 const jobs = [
-  { id: 1, title: "Frontend Developer", company: "TechCorp", location: "Remote" },
-  { id: 2, title: "Backend Engineer", company: "DataSystems", location: "New York, NY" },
-  { id: 3, title: "Full Stack Developer", company: "WebSolutions", location: "San Francisco, CA" },
-  { id: 4, title: "UI/UX Designer", company: "DesignHub", location: "London, UK" },
-  { id: 5, title: "DevOps Engineer", company: "CloudOps", location: "Berlin, Germany" },
+  { id: 1, title: "Frontend Developer", company: "TechCorp", location: "Remote", description: "We are looking for a skilled Frontend Developer to join our team. The ideal candidate should have experience with React, TypeScript, and modern CSS frameworks.", postedDate: "2023-05-15" },
+  { id: 2, title: "Backend Engineer", company: "DataSystems", location: "New York, NY", description: "DataSystems is seeking a Backend Engineer to help build scalable and efficient server-side applications. Experience with Node.js, Express, and MongoDB is required.", postedDate: "2023-05-14" },
+  { id: 3, title: "Full Stack Developer", company: "WebSolutions", location: "San Francisco, CA", description: "Join our team as a Full Stack Developer and work on exciting projects using a variety of technologies including React, Node.js, and PostgreSQL.", postedDate: "2023-05-13" },
+  { id: 4, title: "UI/UX Designer", company: "DesignHub", location: "London, UK", description: "DesignHub is looking for a creative UI/UX Designer to help create intuitive and visually appealing user interfaces for web and mobile applications.", postedDate: "2023-05-12" },
+  { id: 5, title: "DevOps Engineer", company: "CloudOps", location: "Berlin, Germany", description: "We're hiring a DevOps Engineer to help streamline our development and deployment processes. Experience with AWS, Docker, and Kubernetes is a plus.", postedDate: "2023-05-11" },
 ]
 
 interface JobBoardProps {
@@ -22,10 +23,19 @@ interface JobBoardProps {
 export default function JobBoard({ session }: JobBoardProps) {
   const router = useRouter()
   const [isNavigating, setIsNavigating] = useState(false)
+  const [selectedJob, setSelectedJob] = useState<typeof jobs[0] | null>(null)
 
   const handleProfileClick = () => {
     setIsNavigating(true)
     router.push('/profile')
+  }
+
+  const openJobModal = (job: typeof jobs[0]) => {
+    setSelectedJob(job)
+  }
+
+  const closeJobModal = () => {
+    setSelectedJob(null)
   }
 
   return (
@@ -53,26 +63,15 @@ export default function JobBoard({ session }: JobBoardProps) {
         <div className="px-4 py-6 sm:px-0">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {jobs.map((job) => (
-              <JobCard key={job.id} job={job} />
+              <JobCard key={job.id} job={job} onViewDetails={() => openJobModal(job)} />
             ))}
           </div>
         </div>
       </main>
-    </div>
-  )
-}
 
-function JobCard({ job }: { job: { id: number; title: string; company: string; location: string } }) {
-  return (
-    <div className="bg-white shadow rounded-lg p-6">
-      <h2 className="text-xl font-semibold text-gray-900">{job.title}</h2>
-      <p className="mt-2 text-sm text-gray-600">{job.company}</p>
-      <p className="text-sm text-gray-600">{job.location}</p>
-      <button 
-        className="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      >
-        Apply
-      </button>
+      {selectedJob && (
+        <JobModal job={selectedJob} onClose={closeJobModal} />
+      )}
     </div>
   )
 }
