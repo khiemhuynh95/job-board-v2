@@ -39,15 +39,32 @@ export async function updateProfile(formData: FormData) {
   if (!session?.user?.email) {
     throw new Error('You must be logged in to update your profile')
   }
-
   const name = formData.get('name') as string
+  const phoneNumber = formData.get('phoneNumber') as string
+  const education = formData.get('education') as string
+  const gpa = formData.get('gpa') as string
+  const skills = JSON.parse(formData.get('skills') as string)
+  const experience = formData.get('experience') as string
   const resumeFile = formData.get('resume') as File
 
-  let updateData: { name?: string; resumeUrl?: string } = {}
+  let updateData: {
+    name?: string;
+    phoneNumber?: string;
+    education?: string;
+    gpa?: number;
+    skills?: string;
+    experience?: number;
+    resumeUrl?: string;
+  } = {}
 
-  if (name) {
-    updateData.name = name
-  }
+  // Update all values
+  updateData.name = name
+  updateData.phoneNumber = phoneNumber
+  updateData.education = education
+  updateData.gpa = gpa ? parseFloat(gpa) : undefined
+  updateData.skills = JSON.stringify(skills)
+  updateData.experience = experience ? parseFloat(experience) : undefined
+
 
   if (resumeFile && resumeFile.size > 0) {
     try {
@@ -72,7 +89,7 @@ export async function updateProfile(formData: FormData) {
 
   revalidatePath('/profile')
 
-  return { success: true, name: updateData.name, resumeUrl: updateData.resumeUrl }
+  return { success: true }
 }
 
 import { signOut } from 'app/auth'

@@ -1,14 +1,14 @@
 'use client'
-import Link from 'next/link';
-import { Form } from 'app/form';
-import { SubmitButton } from 'app/submit-button';
-import { authenticate } from "@/app/lib/actions";
-import { useFormState } from 'react-dom'; // Import useFormState
+
+import Link from 'next/link'
+import { Form } from 'app/form'
+import { SubmitButton } from 'app/submit-button'
+import { authenticate } from "@/app/lib/actions"
+import { useFormState } from 'react-dom'
+
 export default function Login() {
-  const [errorMessage, formAction] = useFormState(
-    authenticate,
-    undefined
-  );
+  const [errorMessage, formAction] = useFormState(authenticate, undefined)
+
   return (
     <div className="flex h-screen w-screen items-center justify-center bg-gray-50">
       <div className="z-10 w-full max-w-md overflow-hidden rounded-2xl border border-gray-100 shadow-xl">
@@ -18,9 +18,12 @@ export default function Login() {
             Use your email and password to sign in
           </p>
         </div>
-        <Form
-          action={formAction}
-        >
+        <Form action={formAction}>
+          {errorMessage && (
+            <div className="px-4 py-3">
+              <p className="text-sm text-red-500">{errorMessage}</p>
+            </div>
+          )}
           <SubmitButton>Sign in</SubmitButton>
           <p className="text-center text-sm text-gray-600">
             {"Don't have an account? "}
@@ -32,5 +35,5 @@ export default function Login() {
         </Form>
       </div>
     </div>
-  );
+  )
 }

@@ -28,9 +28,15 @@ async function ProfileData() {
   }
 
   const user = {
-    'name': users[0].name,
-    'email': users[0].email,
-    'resumeurl': users[0].resumeUrl
+    id: users[0].id,
+    name: users[0].name,
+    email: users[0].email,
+    phoneNumber: users[0].phoneNumber,
+    education: users[0].education,
+    gpa: users[0].gpa,
+    skills: users[0].skills ? JSON.parse(users[0].skills) : [],
+    experience: users[0].experience,
+    resumeUrl: users[0].resumeUrl
   }
 
   return <ProfileContent user={user} />
